@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Convertisseur français-morse</title>
+</head>
+<body>
+  <h1>Convertisseur français-morse</h1>
+  <p>Entrez du texte en français ci-dessous :</p>
+  <textarea id="input-fr" rows="4" cols="50"></textarea>
+  <button onclick="convertToMorse()">Convertir en morse</button>
+  <p>Le texte en morse s'affichera ici :</p>
+  <textarea id="output-morse" rows="4" cols="50"></textarea>
+  <hr>
+  <p>Entrez du texte en morse ci-dessous :</p>
+  <textarea id="input-morse" rows="4" cols="50"></textarea>
+  <button onclick="convertToText()">Convertir en français</button>
+  <p>Le texte en français s'affichera ici :</p>
+  <textarea id="output-fr" rows="4" cols="50"></textarea>
+
+  <script>
+    const morseCodes = {
+      'a': '.-',    'b': '-...',  'c': '-.-.',  'd': '-..',   'e': '.',
+      'f': '..-.',  'g': '--.',   'h': '....',  'i': '..',    'j': '.---',
+      'k': '-.-',   'l': '.-..',  'm': '--',    'n': '-.',    'o': '---',
+      'p': '.--.',  'q': '--.-',  'r': '.-.',   's': '...',   't': '-',
+      'u': '..-',   'v': '...-',  'w': '.--',   'x': '-..-',  'y': '-.--',
+      'z': '--..',  '0': '-----', '1': '.----', '2': '..---', '3': '...--',
+      '4': '....-', '5': '.....', '6': '-....', '7': '--...', '8': '---..',
+      '9': '----.'
+    };
+
+    function convertToMorse() {
+      const input = document.getElementById('input-fr').value;
+      const morse = convertTextToMorse(input);
+      document.getElementById('output-morse').value = morse;
+    }
+
+    function convertTextToMorse(text) {
+      let morse = '';
+      for (let i = 0; i < text.length; i++) {
+        const char = text[i].toLowerCase();
+        if (morseCodes[char]) {
+          morse += morseCodes[char] + '/';
+        } else if (char === ' ') {
+          morse += '//';
+        }
+      }
+      return morse;
+    }
+
+    function convertToText() {
+      const input = document.getElementById('input-morse').value;
+      const text = convertMorseToText(input);
+      document.getElementById('output-fr').value = text;
+    }
+
+    function convertMorseToText(morse) {
+      let text = '';
+      const words = morse.split('//');
+      for (let i = 0; i < words.length; i++) {
+        const letters = words[i].split('/');
+        for (let j = 0; j < letters.length; j++) {
+         
+        const code = letters[j];
+        let char = '';
+        const keys = Object.keys(morseCodes);
+        for (let k = 0; k < keys.length; k++) {
+          if (morseCodes[keys[k]] === code) {
+            char = keys[k];
+            break;
+          }
+        }
+        text += char;
+      }
+      text += ' ';
+    }
+    return text.trim();
+  }
+  </script>
+</body>
+</html>
